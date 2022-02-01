@@ -69,7 +69,6 @@ def get_message_db():
 
 # @app.route("/")
 def main():
-    get_message_db()
     return render_template("main_better.html")
 
 
@@ -87,7 +86,6 @@ def ask():
 # 
 @app.route('/profile/<name>/')
 def hello_name(name):
-    print("hello")
     return render_template('profile.html', name=name)
 
 
