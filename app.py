@@ -42,8 +42,18 @@ https://pic16b-minimal-demo.herokuapp.com
 This set of lecture notes is based in part on previous materials developed by [Erin George](https://www.math.ucla.edu/~egeo/) (UCLA Mathematics) and the tutorial [here](https://stackabuse.com/deploying-a-flask-application-to-heroku/). 
 '''
 
-from flask import Flask, render_template, request
+from flask import Flask, render_template, request, g
 app = Flask(__name__)
+
+import sqlite3
+
+def get_message_db():
+    if "message_db" not in g:
+        g.message_db = sqlite3.connect("messages_db.sqlite")
+    
+    g.message_db.execute('CREATE TABLE messages (id INTEGER, handle TEXT, message TEXT)')
+    
+    return g.message_db
 
 @app.route("/")
 # simplest possible approach
@@ -59,7 +69,9 @@ app = Flask(__name__)
 
 # @app.route("/")
 def main():
+    get_message_db()
     return render_template("main_better.html")
+
 
 # getting basic user data
 @app.route('/ask/', methods=['POST', 'GET'])
@@ -75,4 +87,8 @@ def ask():
 # 
 @app.route('/profile/<name>/')
 def hello_name(name):
+    print("hello")
     return render_template('profile.html', name=name)
+
+
+
